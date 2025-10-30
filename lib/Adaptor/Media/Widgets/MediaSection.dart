@@ -67,7 +67,7 @@ class _MediaSectionState extends State<MediaSection> {
     return ThemedContainer(
       context: context,
       child: content,
-      padding: const EdgeInsets.only(),
+      padding: EdgeInsets.zero,
       borderRadius: BorderRadius.circular(30.0),
     );
   }

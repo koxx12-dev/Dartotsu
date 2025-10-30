@@ -9,6 +9,7 @@ import 'package:dartotsu/Screens/Search/SearchScreen.dart';
 import 'package:dartotsu/Theme/LanguageSwitcher.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:provider/provider.dart';
 
@@ -65,36 +66,42 @@ class InfoPageState extends State<InfoPage> {
           ),
         if (widget.mediaData.tags.isNotEmpty) ..._buildTags(theme),
         ..._buildPrequelSection(),
-        if (widget.mediaData.relations?.isNotEmpty ?? false)
-          MediaSection(
-            context: context,
-            type: 0,
-            title: getString.relations,
-            mediaList: widget.mediaData.relations,
-            isLarge: true,
-          ),
-        if (widget.mediaData.characters?.isNotEmpty ?? false)
-          entitySection(
-            context: context,
-            type: EntityType.Character,
-            title: getString.characters,
-            list: widget.mediaData.characters,
-          ),
-        if (widget.mediaData.staff?.isNotEmpty ?? false)
-          entitySection(
-            context: context,
-            type: EntityType.Staff,
-            title: getString.staff,
-            list: widget.mediaData.staff,
-          ),
-        if (widget.mediaData.recommendations?.isNotEmpty ?? false)
-          MediaSection(
-            context: context,
-            type: 0,
-            title: getString.recommended,
-            mediaList: widget.mediaData.recommendations,
-          ),
-        const SizedBox(height: 64.0),
+        ...[
+          if (widget.mediaData.relations?.isNotEmpty ?? false)
+            MediaSection(
+              context: context,
+              type: 0,
+              title: getString.relations,
+              mediaList: widget.mediaData.relations,
+              isLarge: true,
+            ),
+          if (widget.mediaData.characters?.isNotEmpty ?? false)
+            entitySection(
+              context: context,
+              type: EntityType.Character,
+              title: getString.characters,
+              list: widget.mediaData.characters,
+            ),
+          if (widget.mediaData.staff?.isNotEmpty ?? false)
+            entitySection(
+              context: context,
+              type: EntityType.Staff,
+              title: getString.staff,
+              list: widget.mediaData.staff,
+            ),
+          if (widget.mediaData.recommendations?.isNotEmpty ?? false)
+            MediaSection(
+              context: context,
+              type: 0,
+              title: getString.recommended,
+              mediaList: widget.mediaData.recommendations,
+            ),
+        ].map((e) => Padding(
+            padding: context.isPhone
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(bottom: 16),
+            child: e)),
+        SizedBox(height: context.isPhone ? 64.0 : 48),
       ],
     );
   }
@@ -258,7 +265,8 @@ class InfoPageState extends State<InfoPage> {
               ),
             ),
         ],
-      )
+      ),
+      if (!context.isPhone) const SizedBox(height: 8.0),
     ];
   }
 

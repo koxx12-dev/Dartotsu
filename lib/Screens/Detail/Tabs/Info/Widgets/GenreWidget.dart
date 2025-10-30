@@ -27,9 +27,7 @@ Widget GenreWidget(BuildContext context, List<String> genres, SearchType type) {
 
   final adjustedGap = gap.clamp(minGap, maxGap);
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-    child: Column(
+  return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -45,6 +43,7 @@ Widget GenreWidget(BuildContext context, List<String> genres, SearchType type) {
         const SizedBox(height: 16.0),
         GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           itemCount: genres.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -79,7 +78,5 @@ Widget GenreWidget(BuildContext context, List<String> genres, SearchType type) {
             );
           },
         ),
-      ],
-    ),
-  );
+      ]);
 }

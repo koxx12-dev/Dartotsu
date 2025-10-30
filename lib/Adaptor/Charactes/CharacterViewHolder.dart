@@ -28,6 +28,7 @@ class CharacterViewHolder extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

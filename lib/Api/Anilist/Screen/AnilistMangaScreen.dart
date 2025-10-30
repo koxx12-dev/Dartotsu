@@ -1,6 +1,7 @@
 import 'package:dartotsu/DataClass/SearchResults.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_utils/src/extensions/context_extensions.dart';
 
 import '../../../Adaptor/Media/Widgets/MediaSection.dart';
 import '../../../DataClass/Media.dart';
@@ -128,20 +129,27 @@ class AnilistMangaScreen extends BaseMangaScreen {
         .where((entry) => entry.value)
         .map((entry) => sectionMap[entry.key])
         .whereType<MediaSectionData>()
-        .map((section) => MediaSection(
+        .map((section) => Padding(
+            padding: context.isPhone
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(bottom: 16.0),
+            child: MediaSection(
               context: context,
               type: section.type,
               title: section.title,
               mediaList: section.list,
-            ))
+            )))
         .toList()
-      ..add(
-        MediaSection(
+      ..add(Padding(
+        padding: context.isPhone
+            ? EdgeInsets.zero
+            : const EdgeInsets.only(bottom: 16.0),
+        child: MediaSection(
           context: context,
           type: 2,
           title: getString.popular(getString.manga),
           mediaList: mangaPopular.value,
         ),
-      );
+      ));
   }
 }

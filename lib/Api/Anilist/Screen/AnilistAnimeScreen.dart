@@ -2,6 +2,7 @@ import 'package:dartotsu/DataClass/Media.dart';
 import 'package:dartotsu/DataClass/SearchResults.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_utils/src/extensions/context_extensions.dart';
 
 import '../../../Adaptor/Media/Widgets/MediaSection.dart';
 import '../../../DataClass/MediaSection.dart';
@@ -127,22 +128,30 @@ class AnilistAnimeScreen extends BaseAnimeScreen {
         .map((entry) => sectionMap[entry.key])
         .whereType<MediaSectionData>()
         .map(
-          (section) => MediaSection(
-            context: context,
-            type: section.type,
-            title: section.title,
-            mediaList: section.list,
-            scrollController: section.scrollController,
-          ),
+          (section) => Padding(
+              padding: context.isPhone
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.only(bottom: 16.0),
+              child: MediaSection(
+                context: context,
+                type: section.type,
+                title: section.title,
+                mediaList: section.list,
+                scrollController: section.scrollController,
+              )),
         )
         .toList()
       ..add(
-        MediaSection(
-          context: context,
-          type: 2,
-          title: getString.popular(getString.anime),
-          mediaList: animePopular.value,
-        ),
+        Padding(
+            padding: context.isPhone
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(bottom: 16.0),
+            child: MediaSection(
+              context: context,
+              type: 2,
+              title: getString.popular(getString.anime),
+              mediaList: animePopular.value,
+            )),
       );
   }
 }

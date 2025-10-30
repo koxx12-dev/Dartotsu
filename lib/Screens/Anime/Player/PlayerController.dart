@@ -752,7 +752,6 @@ class _PlayerControllerState extends State<PlayerController> {
                   controller.resetSubtitle().then(
                         (_) => controller.play(),
                       );
-                  Get.back();
                 } else {
                   controller
                       .setSubtitle(
@@ -763,8 +762,8 @@ class _PlayerControllerState extends State<PlayerController> {
                       .then(
                         (_) => controller.play(),
                       );
-                  Get.back();
                 }
+                Get.back();
               },
               borderRadius: BorderRadius.circular(12),
               child: Padding(

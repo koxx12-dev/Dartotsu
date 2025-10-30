@@ -1,4 +1,6 @@
+import 'package:dartotsu/Theme/ThemeManager.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 
 import '../EntityAdaptor.dart';
 
@@ -11,7 +13,7 @@ Widget entitySection({
   List<Widget>? customNullListIndicator,
 }) {
   var theme = Theme.of(context);
-  return Column(
+  final column = Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (list == null)
@@ -26,7 +28,7 @@ Widget entitySection({
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 28.0, right: 16),
+              padding: const EdgeInsets.only(left: 28.0, right: 16, top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -85,6 +87,14 @@ Widget entitySection({
           ],
         )
     ],
+  );
+
+  if (context.isPhone) return column;
+  return ThemedContainer(
+    context: context,
+    child: column,
+    padding: EdgeInsets.zero,
+    borderRadius: BorderRadius.circular(30.0),
   );
 }
 

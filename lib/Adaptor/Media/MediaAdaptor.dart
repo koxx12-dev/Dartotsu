@@ -224,6 +224,7 @@ class MediaGridState extends State<MediaAdaptor> {
       child: ScrollConfig(
         context,
         child: ListView.builder(
+          padding: EdgeInsets.zero,
           scrollDirection: Axis.horizontal,
           controller: widget.scrollController,
           itemCount: _mediaList.length,
@@ -257,6 +258,7 @@ class MediaGridState extends State<MediaAdaptor> {
     return ScrollConfig(
       context,
       child: ListView.builder(
+        padding: EdgeInsets.zero,
         controller: widget.scrollController,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -265,7 +267,9 @@ class MediaGridState extends State<MediaAdaptor> {
           final media = _mediaList[index];
           final tag = _generateTag(media);
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+            padding: index == 0
+                ? const EdgeInsets.only(left: 18, right: 18, bottom: 4)
+                : const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
             child: _buildAnimatedItem(
               index: index,
               media: media,
@@ -306,6 +310,7 @@ class MediaGridState extends State<MediaAdaptor> {
             final delegate = makeDelegate(constraints.maxWidth);
             return GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               itemCount: _mediaList.length,
               gridDelegate: delegate,

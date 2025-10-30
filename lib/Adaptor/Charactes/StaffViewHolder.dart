@@ -29,6 +29,7 @@ class StaffViewHolder extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,6 +88,7 @@ class StudioViewHolder extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 8),
         Text(
           studioInfo.name ?? "",
           overflow: TextOverflow.ellipsis,

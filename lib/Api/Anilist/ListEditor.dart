@@ -95,15 +95,15 @@ class _ListEditorDialogState extends State<ListEditorDialog> {
               _buildStatusDropdown(),
               const SizedBox(height: 16),
               _buildProgressField(labelStyle, suffixStyle),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _buildScoreField(labelStyle, suffixStyle),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               if (!widget.isCompact) ...[
                 _buildDatePickerRow(suffixStyle),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
               ],
               _buildPrivateSwitch(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               if (!widget.isCompact) ...[
                 Expandable(
                   backgroundColor: theme.surface,
@@ -116,7 +116,7 @@ class _ListEditorDialogState extends State<ListEditorDialog> {
                     suffixStyle,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
               ]
             ],
           ),
