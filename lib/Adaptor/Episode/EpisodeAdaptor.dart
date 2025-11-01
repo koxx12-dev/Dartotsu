@@ -1,8 +1,11 @@
 import 'package:dartotsu/Functions/Function.dart';
+import 'package:dartotsu/Preferences/IsarDataClasses/DefaultPlayerSettings/DefaultPlayerSettings.dart';
+import 'package:dartotsu/Preferences/PrefManager.dart';
 import 'package:dartotsu_extension_bridge/dartotsu_extension_bridge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 import '../../Animation/ScaleAnimation.dart';
 import '../../DataClass/Media.dart';
@@ -223,11 +226,41 @@ void onEpisodeClick(
     );
     return;
   }
-  var episodeDialog = CustomBottomDialog(
+
+  final lastQualityKey = "${mediaData.id}-${source.name}-lastQuality";
+  final autoSourceKey = "${mediaData.id}-${source.name}-autoSource";
+
+  var autoSelectSourceSetting =
+      loadCustomData(autoSourceKey, defaultValue: false);
+
+  final videos = source.methods.getVideoList(episode);
+
+  final episodeDialog = CustomBottomDialog(
     title: 'Select Source',
     viewList: [
+      StatefulBuilder(
+          builder: (context, setState) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: autoSelectSourceSetting,
+                      onChanged: (checked) {
+                        autoSelectSourceSetting = checked ?? false;
+                        saveCustomData(autoSourceKey, autoSelectSourceSetting);
+                        setState(() {});
+                      },
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    const Text(
+                      'Auto Select Source',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              )),
       FutureBuilder<List<Video>>(
-        future: source.methods.getVideoList(episode),
+        future: videos,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -272,6 +305,8 @@ void onEpisodeClick(
                   elevation: 4,
                   child: InkWell(
                     onTap: () {
+                      saveCustomData<String?>(
+                          lastQualityKey, item.title ?? item.quality);
                       onEpisodeClick?.call();
                       Get.back();
                       navigateToPage(
@@ -319,5 +354,60 @@ void onEpisodeClick(
       ),
     ],
   );
+
+  if (autoSelectSourceSetting == true) {
+    var lastQualityTitle =
+        loadCustomData<String?>(lastQualityKey, defaultValue: null);
+
+    if (lastQualityTitle != null) {
+      videos.then((videos) async {
+        if (!context.mounted) return;
+
+        int? index;
+        if (mediaData.settings.playerSettings.autoSourceMatch ==
+            AutoSourceMatch.Exact) {
+          index = videos.indexWhere(
+              (video) => (video.title ?? video.quality) == lastQualityTitle);
+          if (index == -1) index = null;
+        } else {
+          var bestMatch = 0;
+          var bestRating = 0.0;
+
+          for (var i = 0; i < videos.length; i++) {
+            var videoTitle = videos[i].title ?? videos[i].quality;
+            var rating = lastQualityTitle.similarityTo(videoTitle);
+            if (rating > bestRating) {
+              bestRating = rating;
+              bestMatch = i;
+            }
+          }
+
+          index = videos.isNotEmpty ? bestMatch : null;
+        }
+
+        if (index == null) {
+          saveCustomData<String?>(lastQualityKey, null);
+          showCustomBottomDialog(context, episodeDialog);
+          return;
+        }
+        if (videos.isEmpty || !context.mounted) return;
+
+        onEpisodeClick?.call();
+        navigateToPage(
+          context,
+          MediaPlayer(
+            media: mediaData,
+            index: index,
+            videos: videos,
+            currentEpisode: episode,
+            source: source,
+          ),
+        );
+      });
+
+      return;
+    }
+  }
+
   showCustomBottomDialog(context, episodeDialog);
 }

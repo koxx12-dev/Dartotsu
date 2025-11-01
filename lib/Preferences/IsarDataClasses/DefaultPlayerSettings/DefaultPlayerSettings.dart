@@ -4,6 +4,26 @@ part 'DefaultPlayerSettings.g.dart';
 
 //TODO => see if i broke anything
 
+enum AutoSourceMatch {
+  Exact,
+  Closest;
+
+  int toJson() {
+    return switch (this) {
+      AutoSourceMatch.Exact => 0,
+      AutoSourceMatch.Closest => 1,
+    };
+  }
+
+  static AutoSourceMatch fromJson(int json) {
+    return switch (json) {
+      0 => AutoSourceMatch.Exact,
+      1 => AutoSourceMatch.Closest,
+      _ => AutoSourceMatch.Exact,
+    };
+  }
+}
+
 @embedded
 class PlayerSettings {
   String speed;
@@ -23,6 +43,8 @@ class PlayerSettings {
   int subtitleWeight;
   bool useLibass;
   bool useGpuNext;
+  bool autoPlay;
+  AutoSourceMatch autoSourceMatch;
 
   PlayerSettings({
     this.speed = '1x',
@@ -39,6 +61,8 @@ class PlayerSettings {
     this.subtitleWeight = 5,
     this.useLibass = false,
     this.useGpuNext = false,
+    this.autoPlay = true,
+    this.autoSourceMatch = AutoSourceMatch.Exact,
     //  this.useCustomMpvConfig = false,
   });
 
@@ -58,6 +82,9 @@ class PlayerSettings {
       subtitleWeight: json['subtitleWeight'],
       useLibass: json['useLibass'] ?? false,
       useGpuNext: json['useGpuNext'] ?? false,
+      autoPlay: json['autoPlay'] ?? true,
+      autoSourceMatch: AutoSourceMatch.fromJson(
+          json['autoSourceMatch'] ?? AutoSourceMatch.Exact.toJson()),
       //  useCustomMpvConfig: json['useCustomMpvConfig'] ?? false,
     );
   }
@@ -78,6 +105,8 @@ class PlayerSettings {
       'subtitleWeight': subtitleWeight,
       'useLibass': useLibass,
       'useGpuNext': useGpuNext,
+      'autoPlay': autoPlay,
+      'autoSourceMatch': autoSourceMatch.toJson(),
       //'useCustomMpvConfig': useCustomMpvConfig,
     };
   }
